@@ -63,3 +63,7 @@ def disable_dropout_bn(module):
         module_output.add_module(name, disable_dropout_bn(child))
     del module
     return module_output
+
+model = models.resnet18(pretrained=True)
+model = model.eval()
+model = disable_dropout_bn(model)
