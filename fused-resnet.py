@@ -1,5 +1,7 @@
 import torch
 import torch.nn as nn
+from torchvision import models
+from torchvision.models.resnet import BasicBlock, ResNet
 
 def disable_dropout_bn(module):
     module_output = module
@@ -67,3 +69,15 @@ def disable_dropout_bn(module):
 model = models.resnet18(pretrained=True)
 model = model.eval()
 model = disable_dropout_bn(model)
+
+
+if __name__ == "__main__":
+    orig = models.resnet18(pretrained=True).eval()
+    fuse = model.eval()
+    data = torch.randn(1, 3, 224, 224)
+    
+    out1 = orig(data)
+    out2 = fuse(data)
+    
+    diff = out1 - out2
+    print(diff.mean(), diff.std())
